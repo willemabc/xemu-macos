@@ -72,12 +72,24 @@ osacompile -o ~/Applications/"xemu (GameSir).app" macos-local/launcher-xemu-offi
 cp macos-local/xemu-macos-prelaunch.sh ~/Library/Application\ Support/xemu/
 ```
 
+## Git remotes
+
+- `origin`: github.com/willemabc/xemu-macos, my public fork. Push here.
+- `upstream`: github.com/MichaelJSr/xemu-macos. New releases come from here.
+
+After committing a fix, run `git push`. Submodule fetching is off in this
+clone (`fetch.recurseSubmodules = false`), because otherwise a fetch pulls
+gigabytes of QEMU firmware history that xemu doesn't use.
+
 ## Update to a newer xemu-macos release
 
 ```sh
-git fetch origin --tags
+git fetch upstream --tags
 git rebase <new-tag>      # e.g. v0.16.6
+git push --force-with-lease
 ```
 
-Then do a full build. Fixes for the same problems may already be in the new
+The rebase rewrites the branch, so the push needs `--force-with-lease`. That
+is safe: it refuses if GitHub has commits this clone doesn't. Then do a full
+build. Fixes for the same problems may already be in the new
 release, so check whether movies show there before rebasing.
